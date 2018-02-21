@@ -1,7 +1,6 @@
 package loan
 
 import (
-	"fmt"
 	"github.com/dyxj/loan-plan/money"
 	"math"
 	"math/big"
@@ -11,16 +10,6 @@ import (
 const (
 	dayRatio float64 = 30.00 / 360.00
 )
-
-// RepayMonth : all values are in cents
-type RepayMonth struct {
-	BPAmount      int64
-	Date          time.Time
-	IOutPrincipal int64
-	Interest      int64
-	Principal     int64
-	ROutPrincipal int64
-}
 
 // GenPlan : return repayment plan given :-
 // tla, Total Loan Amount in cents.
@@ -35,7 +24,6 @@ func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth,
 
 	// Calculate Annuity
 	a := calcAnnuity(tlaCents, rpp, dur)
-	fmt.Println(a)
 
 	slRM := make([]*RepayMonth, dur)
 

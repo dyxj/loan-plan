@@ -6,8 +6,8 @@ import (
 
 // PlanReq : Loan plan request
 type PlanReq struct {
-	LoanAmount  float64
-	NominalRate float64
-	Duration    int
-	StartDate   time.Time
+	LoanAmount  string    `json:"loanAmount"`
+	NominalRate string    `json:"nominalRate"`
+	Duration    int       `json:"duration"`
+	StartDate   time.Time `json:"startDate"`
 }
