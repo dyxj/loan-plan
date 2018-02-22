@@ -54,3 +54,9 @@ Example Output:
 
 ### Test
 To test the entire package run in the local-plan folder: `go test ./...`
+
+### Docker and Docker Compose  
+An example is provided if you would like to use docker and docker-compose.  
+In this case docker and docker-compose needs to be installed.  
+To start the server run `docker-compose up` in the loan plan directory.  
+Be sure to run `docker-comopse down` when you're done, to perform clean up.  
