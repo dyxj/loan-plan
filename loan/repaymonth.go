@@ -1,6 +1,8 @@
 package loan
 
 import (
+	"github.com/dyxj/loan-plan/money"
+	// "strconv"
 	"time"
 )
 
@@ -16,23 +18,24 @@ type RepayMonth struct {
 
 // RepayMonthDollars : all values are in dollars
 type RepayMonthDollars struct {
-	BPAmount      float64   `json:"borrowerPaymentAmount"`
+	BPAmount      string    `json:"borrowerPaymentAmount"`
 	Date          time.Time `json:"date"`
-	IOutPrincipal float64   `json:"initialOutstandingPrincipal"`
-	Interest      float64   `json:"interest"`
-	Principal     float64   `json:"principal"`
-	ROutPrincipal float64   `json:"remainingOutstandingPrincipal"`
+	IOutPrincipal string    `json:"initialOutstandingPrincipal"`
+	Interest      string    `json:"interest"`
+	Principal     string    `json:"principal"`
+	ROutPrincipal string    `json:"remainingOutstandingPrincipal"`
 }
 
 // Convert2Dollars : Convert for cents type to dollar type
 func (rm *RepayMonth) Convert2Dollars() *RepayMonthDollars {
 	rmd := &RepayMonthDollars{
-		BPAmount:      float64(rm.BPAmount) / 100.00,
+		BPAmount:      money.Cent2DollarStr(rm.BPAmount),
 		Date:          rm.Date,
-		IOutPrincipal: float64(rm.IOutPrincipal) / 100.00,
-		Interest:      float64(rm.Interest) / 100.00,
-		Principal:     float64(rm.Principal) / 100.00,
-		ROutPrincipal: float64(rm.ROutPrincipal) / 100.00,
+		IOutPrincipal: money.Cent2DollarStr(rm.IOutPrincipal),
+		Interest:      money.Cent2DollarStr(rm.Interest),
+		Principal:     money.Cent2DollarStr(rm.Principal),
+		ROutPrincipal: money.Cent2DollarStr(rm.ROutPrincipal),
 	}
+
 	return rmd
 }

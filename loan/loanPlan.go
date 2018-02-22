@@ -19,14 +19,12 @@ const (
 func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth, error) {
 	// Rate per period in %
 	rpp := nir * 30 / 360
-	// Initial Outstanding
+	// Initial Outstanding principal
 	iop := tlaCents
-
 	// Calculate Annuity
 	a := calcAnnuity(tlaCents, rpp, dur)
 
 	slRM := make([]*RepayMonth, dur)
-
 	for i := 0; i < dur; i++ {
 		// Calculate Interest
 		it := calcInterest(iop, nir)
@@ -34,7 +32,7 @@ func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth,
 		//  Calculate Principal
 		p := calcPrincipal(iop, a, it)
 
-		// Calculate BPA
+		// Calculate Borrower Payment Amount(Annuity)
 		bpa := p + it
 
 		rm := &RepayMonth{
@@ -57,31 +55,43 @@ func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth,
 	return slRM, nil
 }
 
+// calcAnnuity : calculates annuity for the duration of the perido
+// pv, present value/total loan amount in cents
+// rpp, rate per period in %
+// periods in months
 func calcAnnuity(pv int64, rpp float64, periods int) int64 {
 	bpv := big.NewFloat(float64(pv))
 	brpp := big.NewFloat(rpp / 100)
-	annuity := new(big.Float).Mul(bpv, brpp)
+
 	adenom := math.Pow(1+rpp/100, float64(-1*periods))
 	bAdenom := new(big.Float).Sub(big.NewFloat(1), big.NewFloat(adenom))
+
+	annuity := new(big.Float).Mul(bpv, brpp)
 	annuity = annuity.Quo(annuity, bAdenom)
-	annuity = money.RoundCent(annuity)
-	intC, _ := annuity.Int64()
-	return intC
+	annuityI := money.RoundCent(annuity)
+	return annuityI
 }
 
-// outstandingAmt, Outstanding Amount in cents.
+// calcInterest : calculates interest given
+// oaCents, Outstanding Amount in cents.
 // nir, Nominal Interest Rate in percentage. ie: 5.00%.
 func calcInterest(oaCents int64, nir float64) int64 {
 	btla := big.NewFloat(float64(oaCents))
 	bdayRatio := big.NewFloat(dayRatio)
 	bnir := big.NewFloat(nir / 100)
+
 	interest := new(big.Float).Mul(btla, bdayRatio)
 	interest.Mul(interest, bnir)
-	interest = money.RoundCent(interest)
-	intC, _ := interest.Int64()
-	return intC
+	interestI := money.RoundCent(interest)
+	return interestI
 }
 
+// calcPrincipal : calculates principal amount
+// oaCents, Outstanding Amount Principal in cents.
+// a, Annuity in cents.
+// i, Interest in cents.
+// if calculated principal is more than outstanding principal amount
+// it returns outstanding principal amount instead.
 func calcPrincipal(oaCents, a, i int64) int64 {
 	principal := a - i
 	if principal > oaCents {
