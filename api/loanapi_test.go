@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/dyxj/loan-plan/api"
-	"github.com/dyxj/loan-plan/loan"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
+
+	"github.com/dyxj/loan-plan/api"
+	"github.com/dyxj/loan-plan/loan"
 )
 
 func TestGenerateLoanPlan(t *testing.T) {
@@ -23,8 +25,9 @@ func TestGenerateLoanPlan(t *testing.T) {
 		"loanAmount":  "5000",
 		"nominalRate": "5.0",
 		"duration":    24,
-		"startDate":   "2018-01-01T00:00:01Z",
+		"startDate":   "2018-01-01",
 	}
+
 	b := new(bytes.Buffer)
 	err := json.NewEncoder(b).Encode(data)
 	if err != nil {
@@ -56,6 +59,9 @@ func TestGenerateLoanPlan(t *testing.T) {
 
 	dataCheck := reflect.DeepEqual(loanResp, ExpData)
 	if !dataCheck {
+		log.Println(loanResp)
+		log.Println("abc")
+		log.Println(ExpData)
 		t.Fatalf("response does not match expected results")
 	}
 }

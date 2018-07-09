@@ -1,10 +1,11 @@
 package loan
 
 import (
-	"github.com/dyxj/loan-plan/money"
 	"math"
 	"math/big"
 	"time"
+
+	"github.com/dyxj/loan-plan/money"
 )
 
 const (
@@ -22,7 +23,7 @@ func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth,
 	// Initial Outstanding principal
 	iop := tlaCents
 	// Calculate Annuity
-	a := calcAnnuity(tlaCents, rpp, dur)
+	a := CalcAnnuity(tlaCents, rpp, dur)
 
 	slRM := make([]*RepayMonth, dur)
 	for i := 0; i < dur; i++ {
@@ -55,11 +56,11 @@ func GenPlan(tlaCents int64, nir float64, dur int, sd time.Time) ([]*RepayMonth,
 	return slRM, nil
 }
 
-// calcAnnuity : calculates annuity for the duration of the perido
+// CalcAnnuity : calculates annuity for the duration of the perido
 // pv, present value/total loan amount in cents
 // rpp, rate per period in %
 // periods in months
-func calcAnnuity(pv int64, rpp float64, periods int) int64 {
+func CalcAnnuity(pv int64, rpp float64, periods int) int64 {
 	bpv := big.NewFloat(float64(pv))
 	brpp := big.NewFloat(rpp / 100)
 
