@@ -5,8 +5,14 @@ Golang Server to generate loan repayment plan.
 Go version 1.8.3
 
 ## Run
-Change directory to loan-plan, run main with `go run main.go`.  
-Backend server deployed to port 8080.  
+3 methods are provided.  
+- Change directory to loan-plan, run main with `go run main.go`.  
+
+- Binaries are provided in the binaries folder. Permissions update required for linux and mac users(ie: chmod).  
+  
+- Instructions on how to run with docker are also provided below.
+  
+Backend server deployed to port 8080.
 
 ### RESTful service URLs
 `POST /generate-plan`  
